@@ -10,10 +10,13 @@ from shot import Shot
 
 def main():
     pygame.init()
+    pygame.font.init()
+    FONT = pygame.font.SysFont("Arial", 24)
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     clock = pygame.time.Clock()
     dt = 0
+    score = 0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -28,6 +31,7 @@ def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH} \nScreen height: {SCREEN_HEIGHT}")
     while True:
+        score_board = FONT.render(f"Score: {score}", True, "white")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -43,11 +47,13 @@ def main():
             for shot in shots:
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
+                    score += 1
                     asteroid.split()
                     shot.kill()
 
         for obj in drawable:
             obj.draw(screen)
+        screen.blit(score_board, (10, 10))
         pygame.display.flip()
         dt = clock.tick(60) / 1000
 
